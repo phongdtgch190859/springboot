@@ -1,10 +1,14 @@
 package com.example.project.entity;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -35,8 +39,21 @@ public class ProductEntity extends BaseEntity {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RatingEntity> ratings = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductVariantEntity> productVariants;
+    @Column
+    private int stockQuantity;
+    @Column
+    private double price;
+    @Column
+    private double discount;
+    @Column
+    private String color;
+    @Column
+    private String thumnail;
+    @Column
+    private int status;
+  
+    @Column
+    private String size;
 
     @Column(name = "num_ratings")
     private int numRatings;

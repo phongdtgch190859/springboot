@@ -2,6 +2,7 @@ package com.example.project.config;
 
 import java.util.Arrays;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -69,5 +70,9 @@ public class AppConfig {
         @Bean
         public PasswordEncoder passwordEncoder() {
                 return new BCryptPasswordEncoder();
+        }
+        @Bean
+        public ModelMapper modelMapper() {
+                return new ModelMapper();
         }
 }

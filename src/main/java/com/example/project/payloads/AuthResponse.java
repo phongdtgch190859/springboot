@@ -1,4 +1,4 @@
-package com.example.project.response;
+package com.example.project.payloads;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

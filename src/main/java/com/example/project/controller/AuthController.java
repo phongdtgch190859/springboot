@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.project.Request.LoginRequest;
 import com.example.project.config.JwtProvider;
 import com.example.project.entity.UserEntity;
 import com.example.project.exception.UserException;
+import com.example.project.payloads.AuthResponse;
+import com.example.project.payloads.LoginRequest;
 import com.example.project.repository.IUserRepository;
-import com.example.project.response.AuthResponse;
 import com.example.project.service.impl.CustomeUserService;
 
 import org.springframework.web.bind.annotation.PostMapping;
