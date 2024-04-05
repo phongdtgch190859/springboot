@@ -1,11 +1,14 @@
 package com.example.project.service.impl;
 
 import java.util.List;
-import java.util.Locale.Category;
+
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.project.entity.CategoryEntity;
@@ -13,6 +16,7 @@ import com.example.project.entity.ProductEntity;
 import com.example.project.exception.APIException;
 import com.example.project.exception.ResourceNotFoundException;
 import com.example.project.payloads.CategoryDto;
+import com.example.project.payloads.CategoryResponse;
 import com.example.project.repository.ICategoryRepository;
 import com.example.project.service.ICategoryService;
 
@@ -47,19 +51,34 @@ public class CategoryService implements ICategoryService{
     }
 
     @Override
-    public List<CategoryDto> getCategories() {
-        // TODO Auto-generated method stub
-        List<CategoryEntity> categories = categoryRepo.findAll();
-        List<CategoryDto> categoryDTOs = categories.stream()
-				.map(category -> modelMapper.map(category, CategoryDto.class)).collect(Collectors.toList());
+   public CategoryResponse getCategories(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+		Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending()
+				: Sort.by(sortBy).descending();
+
+		PageRequest pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
+		
+		Page<CategoryEntity> pageCategories = categoryRepo.findAll(pageDetails);
+
+		List<CategoryEntity> categories = pageCategories.getContent();
 
 		if (categories.size() == 0) {
 			throw new APIException("No category is created till now");
 		}
 
-        return categoryDTOs;
+		List<CategoryDto> categoryDTOs = categories.stream()
+				.map(category -> modelMapper.map(category, CategoryDto.class)).collect(Collectors.toList());
 
-    }
+		CategoryResponse categoryResponse = new CategoryResponse();
+		
+		categoryResponse.setContent(categoryDTOs);
+		categoryResponse.setPageNumber(pageCategories.getNumber());
+		categoryResponse.setPageSize(pageCategories.getSize());
+		categoryResponse.setTotalElements(pageCategories.getTotalElements());
+		categoryResponse.setTotalPages(pageCategories.getTotalPages());
+		categoryResponse.setLastPage(pageCategories.isLast());
+		
+		return categoryResponse;
+	}
 
     @Override
     public CategoryDto updateCategory(CategoryEntity category, Long categoryId) {

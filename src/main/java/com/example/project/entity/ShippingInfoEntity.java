@@ -24,7 +24,11 @@ public class ShippingInfoEntity extends BaseEntity {
     @Column
     private String lastName;
     @Column
-    private String streetAddress;
+    private String tag;
+    @Column
+    private String street;
+    @Column
+    private String buildingName;
 
     @Column
     private String city;

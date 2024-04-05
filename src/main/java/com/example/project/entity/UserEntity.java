@@ -3,6 +3,8 @@ package com.example.project.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.boot.autoconfigure.amqp.RabbitConnectionDetails.Address;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
@@ -13,6 +15,7 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -44,7 +47,7 @@ public class UserEntity extends BaseEntity {
     @Embedded
     @ElementCollection
     @CollectionTable(name = "payment_infomation", joinColumns = @JoinColumn(name = "user_id"))
-    private List<PaymentInfo> paymentInfos = new ArrayList<>();
+    private List<PaymentEntity> paymentInfos = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
@@ -53,4 +56,9 @@ public class UserEntity extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<ReviewEntity> reviews = new ArrayList<>();
+
+    @OneToOne(mappedBy = "user", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, orphanRemoval = true)
+	private CartEntity cart;
+
+    private List<Address> addresses = new ArrayList<>();
 }

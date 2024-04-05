@@ -2,16 +2,15 @@ package com.example.project.service;
 
 
 
-import java.util.List;
-
 import com.example.project.entity.CategoryEntity;
 import com.example.project.payloads.CategoryDto;
+import com.example.project.payloads.CategoryResponse;
 
 public interface ICategoryService {
 
     CategoryDto createCategory(CategoryEntity category);
 
-	List<CategoryDto> getCategories();
+	CategoryResponse getCategories(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 
 	CategoryDto updateCategory(CategoryEntity category, Long categoryId);
 

@@ -10,6 +10,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -46,6 +47,8 @@ public class ProductEntity extends BaseEntity {
     @Column
     private double discount;
     @Column
+    private double specialPrice;
+    @Column
     private String color;
     @Column
     private String thumnail;
@@ -61,4 +64,10 @@ public class ProductEntity extends BaseEntity {
     @ManyToOne()
     @JoinColumn(name = "category_id")
     private CategoryEntity category;
+
+    @OneToMany(mappedBy = "product", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.EAGER)
+	private List<CartItemEntity> products = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	private List<OrderItem> orderItems = new ArrayList<>();
 }
