@@ -60,5 +60,5 @@ public class UserEntity extends BaseEntity {
     @OneToOne(mappedBy = "user", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, orphanRemoval = true)
 	private CartEntity cart;
 
-    private List<Address> addresses = new ArrayList<>();
+  
 }

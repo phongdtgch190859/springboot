@@ -1,11 +1,11 @@
 package com.example.project.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.amqp.RabbitConnectionDetails.Address;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +16,9 @@ import com.example.project.exception.ResourceNotFoundException;
 import com.example.project.payloads.ShippingInfoDto;
 import com.example.project.repository.ShippingIfoPepository;
 import com.example.project.repository.UserRepository;
+import com.example.project.service.IShippingInforService;
 @Service
-public class ShippingInforService {
+public class ShippingInforService implements IShippingInforService{
     @Autowired
 	private ShippingIfoPepository shipIfoRepo;
 
@@ -28,7 +29,7 @@ public class ShippingInforService {
 	private ModelMapper modelMapper;
 
 	@Override
-	public ShippingInfoDto createAddress(ShippingInfoDto shipInfoDTO) {
+	public ShippingInfoDto createShippingInfo(ShippingInfoDto shipInfoDTO) {
 
 		String state = shipInfoDTO.getState();
 		String city = shipInfoDTO.getCity();
@@ -39,59 +40,61 @@ public class ShippingInforService {
 				state, city, street, buildingName);
 
 		if (shipIfoFromDB  != null) {
-			throw new APIException("Address already exists with addressId: " +shipIfoFromDB.getId());
+			throw new APIException("ShippingInfo already exists with ShippingInfoId: " +shipIfoFromDB.getId());
 		}
 
-		ShippingInfoEntity address = modelMapper.map(shipInfoDTO, ShippingInfoEntity.class);
+		ShippingInfoEntity ShippingInfo = modelMapper.map(shipInfoDTO, ShippingInfoEntity.class);
 
-		ShippingInfoEntity savedAddress = shipIfoRepo.save(address);
+		ShippingInfoEntity savedShippingInfo = shipIfoRepo.save(ShippingInfo);
 
-		return modelMapper.map(savedAddress,ShippingInfoDto.class);
+		return modelMapper.map(savedShippingInfo,ShippingInfoDto.class);
 	}
 
 	@Override
-	public List<ShippingInfoDto> getAddresses() {
+	public List<ShippingInfoDto> getShippingInfos() {
 		List<ShippingInfoEntity> shipIfos = shipIfoRepo.findAll();
 
-		List<ShippingInfoDto> shipIfoDTOs = shipIfos.stream().map(address -> modelMapper.map(address, ShippingInfoDto.class))
+		List<ShippingInfoDto> shipIfoDTOs = shipIfos.stream().map(ShippingInfo -> modelMapper.map(ShippingInfo, ShippingInfoDto.class))
 				.collect(Collectors.toList());
 
 		return shipIfoDTOs;
 	}
 
 	@Override
-	public ShippingInfoDto getAddress(Long shipIfoId){
+	public ShippingInfoDto getShipInfo(Long shipIfoId){
 		ShippingInfoEntity shipInfo = shipIfoRepo.findById(shipIfoId)
 				.orElseThrow(() -> new ResourceNotFoundException("Shipping Information", "Id", shipIfoId));
 
 		return modelMapper.map(shipInfo, ShippingInfoDto.class);
 	}
 
+	
+
 	@Override
-	public ShippingInfoDto updateShipInfo(Long shipInfoId, ShippingInfoEntity si) {
+	public ShippingInfoDto updateShipInfo(Long shipInfoId, ShippingInfoDto shipIfo) {
 		ShippingInfoEntity siFromDB = shipIfoRepo.findByStateAndCityAndStreetAndBuildingName(
-				si.getState(), si.getCity(), si.getStreet(),
-				si.getBuildingName());
+			shipIfo.getState(), shipIfo.getCity(), shipIfo.getStreet(),
+			shipIfo.getBuildingName());
 
 		if (siFromDB == null) {
 			siFromDB = shipIfoRepo.findById(shipInfoId)
 					.orElseThrow(() -> new ResourceNotFoundException("Shipping Information", "Id", shipInfoId));
 
 		
-			siFromDB.setState(si.getState());
-			siFromDB.setCity(si.getCity());
-			siFromDB.setStreet(si.getStreet());
-			siFromDB.setBuildingName(si.getBuildingName());
+			siFromDB.setState(shipIfo.getState());
+			siFromDB.setCity(shipIfo.getCity());
+			siFromDB.setStreet(shipIfo.getStreet());
+			siFromDB.setBuildingName(shipIfo.getBuildingName());
 
 			CrudRepository<ShippingInfoEntity, Long> shipInfoIdRepo;
-            ShippingInfoEntity updatedSi = shipInfoIdRepo.save(siFromDB);
+            ShippingInfoEntity updatedSi = shipIfoRepo.save(siFromDB);
 
 			return modelMapper.map(updatedSi, ShippingInfoDto.class);
 		} else {
-			UserEntity user = userRepo.findById(shipInfoId);
-			final ShippingInfoEntity a = siFromDB;
+			Optional<UserEntity> user = userRepo.findById(shipInfoId);
+			final ShippingInfoEntity si = siFromDB;
 
-			user.getShippingInfos().add(a);
+			user.get().getShippingInfos().add(si);
 
 			deleteShipInfo(shipInfoId);
 
@@ -100,17 +103,19 @@ public class ShippingInforService {
 	}
 
 	@Override
-	public String deleteShipInfo(Long siId) {
-		ShippingInfoEntity siFromDB = shipIfoRepo.findById(siId)
-				.orElseThrow(() -> new ResourceNotFoundException("Shpping info", "Id", siId));
+	public String deleteShipInfo(Long shipIfoId) {
+		ShippingInfoEntity siFromDB = shipIfoRepo.findById(shipIfoId)
+		.orElseThrow(() -> new ResourceNotFoundException("Shpping info", "Id", shipIfoId));
 
-		UserEntity user = userRepo.findById(siFromDB.getUser().getId());
+		Optional<UserEntity> user = userRepo.findById(siFromDB.getUser().getId());
 
-		
-		user.getAddresses().remove(siFromDB);
 
-		shipIfoRepo.deleteById(siId);
+		user.get().getShippingInfos().remove(siFromDB);
 
-		return "Shipping information deleted succesfully with addressId: " + siId;
+		shipIfoRepo.deleteById(shipIfoId);
+
+		return "Shipping information deleted succesfully with ShippingInfoId: " + shipIfoId;
 	}
+
+	
 }

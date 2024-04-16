@@ -24,7 +24,7 @@ import com.example.project.service.impl.CustomeUserService;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/puclic")
 public class AuthController {
 
     private IUserRepository userRepository;

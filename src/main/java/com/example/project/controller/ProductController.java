@@ -24,12 +24,12 @@ import com.example.project.service.impl.ProductService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api")
 public class ProductController {
     @Autowired
 	private ProductService productService;
 
-    @PostMapping("/admin/categories/{categoryId}/product")
+    @PostMapping("/public/categories/{categoryId}/product")
 	public ResponseEntity<ProductDto> addProduct(@Valid @RequestBody ProductEntity product, @PathVariable Long categoryId) {
 
 		ProductDto savedProduct = productService.addProduct(categoryId, product);

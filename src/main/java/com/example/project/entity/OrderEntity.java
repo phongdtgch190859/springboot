@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "Orders")
+@Table(name = "orders")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -30,13 +30,14 @@ public class OrderEntity extends BaseEntity{
 
 	@OneToMany(mappedBy = "order", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	private List<OrderItem> orderItems = new ArrayList<>();
-
+	@Column
 	private LocalDate orderDate;
 	
 	@OneToOne
 	@JoinColumn(name = "payment_id")
 	private PaymentEntity payment;
-	
+	@Column
 	private Double totalAmount;
+	@Column
 	private String orderStatus;
 }

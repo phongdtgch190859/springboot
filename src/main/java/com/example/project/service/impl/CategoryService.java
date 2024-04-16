@@ -38,11 +38,17 @@ public class CategoryService implements ICategoryService{
 
     @Override
     public CategoryDto createCategory(CategoryEntity category) {
+
         // TODO Auto-generated method stub
         CategoryEntity savedCategory = categoryRepo.findByName(category.getName());
 
 		if (savedCategory != null) {
 			throw new APIException("Category with the name '" + category.getName() + "' already exists !!!");
+		}
+		if(category.getCategoryLevel() == 1){
+			savedCategory.setChildren(category.getChildren());
+		}else{
+			savedCategory.setParent(category.getParent());
 		}
 
 		savedCategory = categoryRepo.save(category);

@@ -4,13 +4,14 @@ import java.util.List;
 import com.example.project.payloads.ShippingInfoDto;
 
 public interface IShippingInforService {
-    ShippingInfoDto createAddress(ShippingInfoDto shipIfoDTO);
+    ShippingInfoDto createShippingInfo(ShippingInfoDto shipIfoDTO);
 	
-	List<ShippingInfoDto> getAddresses();
+	List<ShippingInfoDto>  getShippingInfos();
 	
-	ShippingInfoDto getAddress(Long shipIfoId);
+	ShippingInfoDto getShipInfo(Long shipIfoId);
 	
-	ShippingInfoDto updateAddress(Long shipIfoId, ShippingInfoDto shipIfo);
+	ShippingInfoDto updateShipInfo(Long shipIfoId, ShippingInfoDto shipIfo);
 	
-	String deleteAddress(Long shipIfoId);
+	String deleteShipInfo(Long shipIfoId);
+	
 }

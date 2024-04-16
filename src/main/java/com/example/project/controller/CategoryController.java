@@ -24,12 +24,12 @@ import com.example.project.service.impl.CategoryService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api")
 public class CategoryController {
     @Autowired
 	private CategoryService categoryService;
 
-	@PostMapping("/admin/category")
+	@PostMapping("/public/category")
 	public ResponseEntity<CategoryDto> createCategory(@Valid @RequestBody CategoryEntity category) {
 		CategoryDto savedCategoryDTO = categoryService.createCategory(category);
 

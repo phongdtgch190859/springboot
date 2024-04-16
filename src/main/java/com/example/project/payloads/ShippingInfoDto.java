@@ -15,8 +15,10 @@ public class ShippingInfoDto extends BaseDto{
     private String lastName;
     private String tag;
     private String streetAddress;
+    private String street;
     private String city;
     private String state;
+    private String buildingName;
     private String mobie;
     private UserDto user;
 }

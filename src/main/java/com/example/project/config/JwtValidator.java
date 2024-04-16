@@ -3,9 +3,6 @@ package com.example.project.config;
 import java.io.IOException;
 
 import javax.crypto.SecretKey;
-
-import org.hibernate.mapping.List;
-import org.springframework.boot.actuate.endpoint.SecurityContext;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

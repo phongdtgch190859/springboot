@@ -66,7 +66,7 @@ public class ProductEntity extends BaseEntity {
     private CategoryEntity category;
 
     @OneToMany(mappedBy = "product", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.EAGER)
-	private List<CartItemEntity> products = new ArrayList<>();
+	private List<CartItemEntity> cartItems = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	private List<OrderItem> orderItems = new ArrayList<>();

@@ -17,7 +17,7 @@ import com.example.project.payloads.CartDto;
 import com.example.project.service.impl.CartService;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api")
 public class CartController {
     @Autowired
 	private CartService cartService;
